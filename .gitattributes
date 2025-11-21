@@ -1,0 +1,18 @@
+# Set all text files to use LF line endings
+*.cs text eol=lf
+*.meta text eol=lf
+*.csproj text eol=lf
+*.sln text eol=lf
+*.user text eol=lf
+*.userprefs text eol=lf
+.gitignore text eol=lf
+.gitattributes text eol=lf
+
+# Mark these as binary (no line ending conversion)
+*.png binary
+*.jpg binary
+*.drawio binary
+*.pdf binary
+
+# Enforce LF for all text files
+* text=auto

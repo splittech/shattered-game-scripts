@@ -1,0 +1,8 @@
+# Exclude temporary editor files
+*.csproj
+*.sln
+*.user
+*.userprefs
+
+# Esclude drawio file with editable diagram
+*.drawio
