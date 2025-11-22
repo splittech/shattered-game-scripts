@@ -107,9 +107,9 @@ public abstract class InteractableObject : MonoBehaviour
 
     void StartInteraction()
     {
-        GameManager.playerMovement.OnPlayerFinishedWalkToPosition -= Interact;
+        GameManager.playerMovement.OnPlayerFinishedWalkToPosition -= StartInteraction;
         Interact();
     }
 
-    public abstract void Interact();
+    protected abstract void Interact();
 }
