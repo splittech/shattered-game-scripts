@@ -12,11 +12,15 @@ public class Button : InteractableObject, ISignalGenerator
     float currentTime = 5;
     bool isActive = false;
 
+    [Header("Debug")]
+    bool debugEnabled = false;
+    GameObject debugFloatingText;
 
     private void FixedUpdate()
     {
         if (isActive)
         {
+            debugFloatingText = DebugHelper.FloatingText(currentTime.ToString(), gameObject, debugFloatingText);
             currentTime -= Time.fixedDeltaTime;
             if (currentTime < 0)
             {
@@ -35,6 +39,7 @@ public class Button : InteractableObject, ISignalGenerator
         if (isActive != newState)
         {
             isActive = newState;
+
             OnSignalChanged?.Invoke(isActive);
         }
     }

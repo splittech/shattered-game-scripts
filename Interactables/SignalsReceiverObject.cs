@@ -3,9 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR;
 
-public class SignalsReceiverObject : MonoBehaviour
+public abstract class SignalsReceiverObject : MonoBehaviour
 {
-    public List<ISignalGenerator> signalGenerators;
+    public GameObject[] signalGeneratorObjects;
+    public ISignalGenerator[] signalGenerators;
+
+    void OnValidate()
+    {
+        if (signalGeneratorObjects != null)
+        {
+            foreach (var signalGeneratorObject in signalGeneratorObjects)
+            {
+                if (signalGeneratorObject != null)
+                {
+                    if (!signalGeneratorObject.TryGetComponent<ISignalGenerator>(out var checkImplementsInterface))
+                        Debug.LogError($"Object does not implement the interface {typeof(ISignalGenerator)}", this);
+                }
+            }
+        }
+    }
+    
 
     bool isActive = false;
 
@@ -21,6 +38,12 @@ public class SignalsReceiverObject : MonoBehaviour
 
     private void Start()
     {
+        signalGenerators = new ISignalGenerator[signalGeneratorObjects.Length];
+        for (int i = 0; i < signalGeneratorObjects.Length; i++)
+        {
+            signalGenerators[i] = signalGeneratorObjects[i].GetComponent<ISignalGenerator>();
+        }
+
         foreach (var signalGenerator in signalGenerators)
         {
             signalGenerator.OnSignalChanged += CheckUpdatedSignals;
@@ -60,7 +83,7 @@ public class SignalsReceiverObject : MonoBehaviour
 
         if (checkSignalsOption == CheckSignalsOptions.AllSignalsAreTrue)
         {
-            newState = activeSignals == signalGenerators.Count;
+            newState = activeSignals == signalGenerators.Length;
         }
         else if (checkSignalsOption == CheckSignalsOptions.AtLeastOneSignalIsTrue)
         {
@@ -78,8 +101,5 @@ public class SignalsReceiverObject : MonoBehaviour
         }
     }
 
-    void ChangeState(bool state)
-    {
-
-    }
+    protected abstract void ChangeState(bool state);
 }
