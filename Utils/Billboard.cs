@@ -9,11 +9,6 @@ public class Billboard : MonoBehaviour
     void Start()
     {
         _camera = Camera.main;
-    }
-
-    void LateUpdate()
-    {
-        // Простой поворот к камере
         transform.LookAt(transform.position + _camera.transform.forward);
     }
 }

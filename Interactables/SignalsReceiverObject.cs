@@ -81,6 +81,11 @@ public abstract class SignalsReceiverObject : MonoBehaviour
     {
         bool newState = false;
 
+        if (signalGeneratorObjects.Length == 0)
+        {
+            return;
+        }
+
         if (checkSignalsOption == CheckSignalsOptions.AllSignalsAreTrue)
         {
             newState = activeSignals == signalGenerators.Length;

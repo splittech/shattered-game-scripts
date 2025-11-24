@@ -3,6 +3,9 @@ using UnityEngine;
 public static class GameManager
 {
     public static PlayerMovement playerMovement;
+    public static PlayerCombat playerCombat;
+
+    public static string playerTag = "Player";
 
     public static void QuitApplication()
     {

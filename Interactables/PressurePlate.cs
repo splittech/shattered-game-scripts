@@ -2,14 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class Button : InteractableObject, ISignalGenerator
+public class PressurePlate : MonoBehaviour, ISignalGenerator
 {
-    public event Action<bool> OnSignalChanged;
-
-    [Header("Button Parameters")]
+    [Header("Pressure Plate Parameters")]
     public float resetTime = 5;
+    public bool dealDamage = false;
+    public float damageAmmount = 10;
     float currentTime = 5;
     bool isActive = false;
 
@@ -17,6 +18,27 @@ public class Button : InteractableObject, ISignalGenerator
     public bool debugEnabled = false;
     public GameObject debugFloatingTextPrefab;
     TMP_Text debugFloatingText;
+
+    public event Action<bool> OnSignalChanged;
+
+    public bool GetCurrentSignal()
+    {
+        return isActive;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag(GameManager.playerTag))
+        {
+            if (dealDamage)
+            {
+                PlayerCombat playerCombat = other.GetComponent<PlayerCombat>();
+                playerCombat.TakeDamage(damageAmmount);
+            }
+
+            ChangeState(true);
+        }
+    }
 
     private void FixedUpdate()
     {
@@ -31,7 +53,7 @@ public class Button : InteractableObject, ISignalGenerator
                     debugFloatingTextPrefab
                 );
             }
-            
+
             currentTime -= Time.fixedDeltaTime;
             if (currentTime < 0)
             {
@@ -39,16 +61,16 @@ public class Button : InteractableObject, ISignalGenerator
             }
         }
     }
-    protected override void Interact()
-    {
-        currentTime = resetTime;
-        ChangeState(true);
-    }
 
     void ChangeState(bool newState)
     {
         if (isActive != newState)
         {
+            if (newState)
+            {
+                currentTime = resetTime;
+            }
+
             isActive = newState;
 
             if (debugEnabled)
@@ -56,22 +78,7 @@ public class Button : InteractableObject, ISignalGenerator
                 DebugHelper.LogWithObject(gameObject, "isActive", isActive.ToString());
             }
 
-            if (animator != null)
-            {
-                ChangeAnimationState();
-            }
-
             OnSignalChanged?.Invoke(isActive);
         }
-    }
-
-    void ChangeAnimationState()
-    {
-        animator.SetBool("isActive", isActive);
-    }
-
-    public bool GetCurrentSignal()
-    {
-        return isActive;
     }
 }

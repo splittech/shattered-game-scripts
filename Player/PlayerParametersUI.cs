@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,19 +7,26 @@ using UnityEngine.UI;
 
 public class PlayerParametersUI : MonoBehaviour
 {
-    public PlayerMovement player;
+    public PlayerMovement playerMovement;
+    public PlayerCombat playerCombat;
     public Slider staminaSlider;
+    public Slider healthSlider;
     public TMP_Text staminaText;
-
-    float maxStamina = 0;
+    public TMP_Text healthText;
 
     private void Start()
     {
-        player = GameManager.playerMovement;
+        playerMovement = GameManager.playerMovement;
+        playerCombat = GameManager.playerCombat;
 
-        player.OnStaminaChanged += ChangeStamina;
+        playerMovement.OnStaminaChanged += ChangeStamina;
+        playerCombat.OnHealthChanged += ChangeHealth;
+    }
 
-        maxStamina = player.maxStamina;
+    private void ChangeHealth(float currentHealth)
+    {
+        healthSlider.value = currentHealth / playerCombat.maxHealth;
+        healthText.text = ((int)currentHealth).ToString();
     }
 
     public void ChangeState(PlayerMovement.MovementStates state)
@@ -43,7 +51,7 @@ public class PlayerParametersUI : MonoBehaviour
 
     public void ChangeStamina(float stamina)
     {
-        staminaSlider.value = stamina / maxStamina;
+        staminaSlider.value = stamina / playerMovement.maxStamina;
         staminaText.text = ((int)stamina).ToString();
     }
 }

@@ -19,11 +19,21 @@ public class Lever : InteractableObject, ISignalGenerator
             DebugHelper.LogWithObject(gameObject, "isActive", isActive.ToString());
         }
 
+        if (animator != null)
+        {
+            ChangeAnimationState();
+        }
+
         OnSignalChanged?.Invoke(isActive);
     }
 
     public bool GetCurrentSignal()
     {
         return isActive;
+    }
+
+    void ChangeAnimationState()
+    {
+        animator.SetBool("isActive", isActive);
     }
 }

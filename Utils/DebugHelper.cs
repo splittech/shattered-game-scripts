@@ -33,17 +33,15 @@ public static class DebugHelper
         Debug.Log(gameObject.name + " => " + name + ": " + value);
     }
 
-    public static GameObject FloatingText(string value, GameObject parentGameobject, GameObject textObject = null)
+    public static TMP_Text FloatingText(string value, GameObject parentGameobject, TMP_Text textObject, GameObject floatingTextPrefab)
     {
-        TMP_Text text = null;
         if (textObject == null)
         {
-            textObject = new GameObject("Debug Floating Text", typeof(TMP_Text));
-            textObject.transform.position = parentGameobject.transform.position + new Vector3(0, 1, 0);
-            textObject.transform.SetParent(parentGameobject.transform);
+            GameObject canvas = Object.Instantiate(floatingTextPrefab, parentGameobject.transform);
+            canvas.transform.position = parentGameobject.transform.position + new Vector3(0, 1, 0);
+            textObject = canvas.GetComponentInChildren<TMP_Text>();
         }
-        text = textObject.GetComponent<TMP_Text>();
-        text.text = value;
+        textObject.text = value;
         return textObject;
     }
 }

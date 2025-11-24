@@ -17,6 +17,7 @@ public abstract class InteractableObject : MonoBehaviour
     PlayerMovement player;
     HoverableObject hoverable;
     Outline outline;
+    protected Animator animator;
 
     public enum InteractionPlaceOptions
     {
@@ -37,6 +38,11 @@ public abstract class InteractableObject : MonoBehaviour
             outline.enabled = false;
         }
         outline.OutlineColor = unreachableColor;
+
+        if (TryGetComponent<Animator>(out var animatorComponent))
+        {
+            animator = animatorComponent;
+        }
     }
 
     private void Start()
