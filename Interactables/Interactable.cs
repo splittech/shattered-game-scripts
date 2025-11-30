@@ -3,9 +3,11 @@ using UnityEngine;
 
 [RequireComponent(typeof(HoverableObject))]
 [RequireComponent(typeof(Outline))]
-public abstract class InteractableObject : MonoBehaviour
+public class Interactive : MonoBehaviour
 {
     [Header("Parameters")]
+    public Action OnInteracted;
+
     public Color reachableColor = Color.green;
     public Color unreachableColor = Color.yellow;
     public InteractionPlaceOptions interactionPlaceType = InteractionPlaceOptions.Fixed;
@@ -17,7 +19,6 @@ public abstract class InteractableObject : MonoBehaviour
     PlayerMovement player;
     HoverableObject hoverable;
     Outline outline;
-    protected Animator animator;
 
     public enum InteractionPlaceOptions
     {
@@ -38,11 +39,6 @@ public abstract class InteractableObject : MonoBehaviour
             outline.enabled = false;
         }
         outline.OutlineColor = unreachableColor;
-
-        if (TryGetComponent<Animator>(out var animatorComponent))
-        {
-            animator = animatorComponent;
-        }
     }
 
     private void Start()
@@ -114,8 +110,6 @@ public abstract class InteractableObject : MonoBehaviour
     void StartInteraction()
     {
         GameManager.playerMovement.OnPlayerFinishedWalkToPosition -= StartInteraction;
-        Interact();
+        OnInteracted?.Invoke();
     }
-
-    protected abstract void Interact();
 }

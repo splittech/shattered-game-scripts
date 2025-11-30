@@ -4,9 +4,14 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Button : InteractableObject, ISignalGenerator
+[RequireComponent(typeof(Interactive))]
+public class Button : MonoBehaviour, ISignalGenerator
 {
     public event Action<bool> OnSignalChanged;
+
+    [Header("References")]
+    Interactive interactive;
+    Animator animator;
 
     [Header("Button Parameters")]
     public float resetTime = 5;
@@ -17,6 +22,18 @@ public class Button : InteractableObject, ISignalGenerator
     public bool debugEnabled = false;
     public GameObject debugFloatingTextPrefab;
     TMP_Text debugFloatingText;
+
+    private void Awake()
+    {
+        interactive = GetComponent<Interactive>();
+
+        interactive.OnInteracted += Interact;
+
+        if (TryGetComponent<Animator>(out var animatorComponent))
+        {
+            animator = animatorComponent;
+        }
+    }
 
     private void FixedUpdate()
     {
@@ -39,7 +56,7 @@ public class Button : InteractableObject, ISignalGenerator
             }
         }
     }
-    protected override void Interact()
+    void Interact()
     {
         currentTime = resetTime;
         ChangeState(true);

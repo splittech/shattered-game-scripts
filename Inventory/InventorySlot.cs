@@ -32,6 +32,10 @@ public class InventorySlot : MonoBehaviour
 
     public void TakeItemFromSlot()
     {
+        if (inventoryItem != null)
+        {
+            Destroy(inventoryItem.gameObject);
+        }
         this.inventoryItem = null;
     }
 }

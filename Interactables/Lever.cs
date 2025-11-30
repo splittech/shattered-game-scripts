@@ -3,14 +3,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Lever : InteractableObject, ISignalGenerator
+[RequireComponent(typeof(Interactive))]
+public class Lever : MonoBehaviour, ISignalGenerator
 {
+    [Header("References")]
+    Interactive interactive;
+    Animator animator;
+
     public event Action<bool> OnSignalChanged;
     bool isActive = false;
 
     [Header("Debug")]
     public bool debugEnabled = false;
-    protected override void Interact()
+
+    private void Awake()
+    {
+        interactive = GetComponent<Interactive>();
+
+        interactive.OnInteracted += Interact;
+
+        if (TryGetComponent<Animator>(out var animatorComponent))
+        {
+            animator = animatorComponent;
+        }
+    }
+
+    void Interact()
     {
         isActive = !isActive;
 

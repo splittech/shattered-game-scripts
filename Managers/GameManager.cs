@@ -4,6 +4,8 @@ public static class GameManager
 {
     public static PlayerMovement playerMovement;
     public static PlayerCombat playerCombat;
+    public static PlayerInventory playerInventory;
+    public static NavMeshChangeDetector navMeshChangeDetector;
 
     public static string playerTag = "Player";
 

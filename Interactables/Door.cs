@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine.XR;
 
 public class Door : SignalsReceiverObject
 {
+    public Action OnNavMeshChanged;
+
     [Header("References")]
     Animator animator;
 
@@ -29,6 +32,7 @@ public class Door : SignalsReceiverObject
         if (animator != null)
         {
             animator.SetBool("isOpened", state);
+            OnNavMeshChanged?.Invoke();
         }
     }
 }
